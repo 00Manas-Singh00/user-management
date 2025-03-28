@@ -32,6 +32,9 @@ npm install
 npm start
 ```
 
+## Deployed link 
+- You can visit the Application here: [EmployWise](https://employwize.netlify.app/)
+
 ## Application Details
 - Login Credentials:
   - Email: eve.holt@reqres.in
