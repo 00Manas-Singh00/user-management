@@ -37,6 +37,9 @@ npm start
   - Email: eve.holt@reqres.in
   - Password: cityslicka
 
+## Deployed link 
+- You can visit the Application here: [EmployWise](https://employwize.netlify.app/)
+
 ## Technologies Used
 - React
 - React Router
