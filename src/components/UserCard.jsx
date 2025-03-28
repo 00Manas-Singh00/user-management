@@ -23,12 +23,14 @@ function UserCard({
         component="img"
         height="250"
         image={user.avatar}
+        hoverEffect="scale(1.1)"
         alt={`${user.first_name} ${user.last_name}`}
       />
       <CardContent>
         <Typography 
           gutterBottom 
           variant="h5" 
+          fontWeight={600}
           component="div"
         >
           {user.first_name} {user.last_name}

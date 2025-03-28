@@ -10,13 +10,17 @@ import {
   DialogActions,
   Button,
   Snackbar,
-  Alert
+  Alert,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import { userService } from '../services/api';
 import EditUserModal from './EditUserModal';
 import UserCard from './UserCard';
 
 function UserList() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -59,17 +63,9 @@ function UserList() {
   const handleDelete = async () => {
     try {
       await userService.deleteUser(userToDelete);
-      
-      // Remove the deleted user from the local state
       setUsers(prevUsers => prevUsers.filter(user => user.id !== userToDelete));
-      
-      // Close delete dialog
       setIsDeleteDialogOpen(false);
-      
-      // Show success message
       handleSuccess('User deleted successfully');
-      
-      // If the last user on the page is deleted, go to previous page
       if (users.length === 1 && page > 1) {
         setPage(page - 1);
       }
@@ -79,7 +75,6 @@ function UserList() {
   };
 
   const handleUpdateUser = (updatedUser) => {
-    // Update user in the list
     const updatedUsers = users.map(user => 
       user.id === updatedUser.id ? { ...user, ...updatedUser } : user
     );
@@ -105,29 +100,70 @@ function UserList() {
   };
 
   return (
-    <Container>
-      <Grid container spacing={3} sx={{ mt: 2 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Grid 
+        container 
+        spacing={3}
+        sx={{
+          justifyContent: 'center',
+          [theme.breakpoints.down('sm')]: {
+            spacing: 2
+          }
+        }}
+      >
         {users.map((user) => (
-          <Grid item xs={12} sm={6} md={4} key={user.id}>
-            <UserCard 
+          <Grid 
+            item 
+            key={user.id}
+            xs={12} 
+            sm={6} 
+            md={4} 
+            lg={3}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <UserCard
               user={user}
               onEdit={() => handleEdit(user)}
               onDelete={() => handleDeleteConfirmation(user.id)}
+              sx={{
+                width: '100%',
+                maxWidth: 345,
+                margin: 0,
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  transition: 'transform 0.3s ease'
+                }
+              }}
             />
           </Grid>
         ))}
       </Grid>
-      
+
       <Grid 
         container 
         justifyContent="center" 
-        sx={{ mt: 4, mb: 4 }}
+        sx={{ 
+          mt: 4, 
+          mb: 2,
+          [theme.breakpoints.down('sm')]: {
+            mt: 3
+          }
+        }}
       >
         <Pagination 
           count={totalPages} 
           page={page} 
           onChange={handlePageChange} 
-          color="primary" 
+          color="primary"
+          size={isMobile ? 'small' : 'medium'}
+          sx={{
+            '& .MuiPaginationItem-root': {
+              fontSize: isMobile ? '0.875rem' : '1rem'
+            }
+          }}
         />
       </Grid>
 
@@ -135,6 +171,7 @@ function UserList() {
       <Dialog
         open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        fullScreen={isMobile}
       >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
@@ -143,10 +180,19 @@ function UserList() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsDeleteDialogOpen(false)} color="primary">
+          <Button 
+            onClick={() => setIsDeleteDialogOpen(false)} 
+            color="primary"
+            size={isMobile ? 'large' : 'medium'}
+          >
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="error" autoFocus>
+          <Button 
+            onClick={handleDelete} 
+            color="error" 
+            autoFocus
+            size={isMobile ? 'large' : 'medium'}
+          >
             Delete
           </Button>
         </DialogActions>
@@ -158,10 +204,10 @@ function UserList() {
           onClose={() => setIsEditModalOpen(false)}
           user={selectedUser}
           onUpdate={handleUpdateUser}
+          fullScreen={isMobile}
         />
       )}
 
-      {/* Snackbar for Success/Error Messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
@@ -171,7 +217,10 @@ function UserList() {
         <Alert 
           onClose={handleCloseSnackbar} 
           severity={snackbarSeverity} 
-          sx={{ width: '100%' }}
+          sx={{ 
+            width: '100%',
+            boxShadow: 3 
+          }}
         >
           {snackbarMessage}
         </Alert>
