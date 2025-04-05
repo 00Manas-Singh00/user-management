@@ -18,7 +18,7 @@ This is a React application for user management that integrates with the Reqres 
 
 1. Clone the repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/00Manas-Singh00/user-management
 cd user-management
 ```
 
